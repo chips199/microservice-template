@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 
 public class TodoList {
 
+    String id;
     List<Task> tasks;
 
-    public TodoList() {
-        tasks = new ArrayList<>();
+    public TodoList(String id) {
+        this.id = id;
+        this.tasks = new ArrayList<>();
     }
 
     public void add(Task todo) {
@@ -21,5 +23,9 @@ public class TodoList {
 
     public List<Task> getOpenTasks() {
         return tasks.stream().filter(t -> !t.finished).collect(Collectors.toList());
+    }
+
+    public String getId() {
+        return id;
     }
 }

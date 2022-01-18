@@ -13,4 +13,8 @@ public class Task {
     public void finish() {
         this.finished = true;
     }
+
+    public String getContent() {
+        return content;
+    }
 }

@@ -23,7 +23,7 @@ class TodoServiceTest {
     void getTodoLists() {
         // Given
         List<TodoList> result = new ArrayList<>();
-        result.add(new TodoList());
+        result.add(new TodoList("123"));
         when(adapter.loadTodoLists()).thenReturn(result);
         TodoService service = new TodoService(adapter);
 

@@ -15,8 +15,7 @@ public class TodoListEntity {
     public List<String> tasks;
 
     public TodoList toDomain() {
-        TodoList todos = new TodoList();
-
+        TodoList todos = new TodoList(this.id);
         tasks.forEach(t -> todos.add(new Task(t)));
         return todos;
     }
