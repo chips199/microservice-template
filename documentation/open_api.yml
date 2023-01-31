@@ -1,0 +1,494 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Survey API
+paths:
+    /surveys:
+      get:
+        summary: list of surveys
+        operationId: listSurveys
+        tags:
+          - survey
+        parameters:
+          - name: survey_number
+            in: query
+            required: false
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Surveys'
+      post:
+        summary: Create Survey
+        operationId: createSurvey
+        tags:
+          - survey
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSurveyRequest'
+        responses:
+          '201':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Survey'
+    /surveys/{survey-id}:
+      get:
+          summary: Survey
+          operationId: survey
+          tags:
+            - survey
+          parameters:
+            - name: survey-id
+              in: path
+              required: true
+              schema:
+                type: integer
+          responses:
+            '200':
+              description: Success
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/Survey'
+      delete:
+        summary: Delete Survey
+        operationId: deleteSurvey
+        tags:
+          - survey
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '204':
+            description: Success
+    
+    /surveys/{survey-id}/questions:
+      get:
+        summary: list of Questions
+        operationId: listQuestions
+        tags:
+          - question
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Questions'
+      post:
+        summary: Create Question
+        operationId: createQuestion
+        tags:
+          - question
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateQuestionRequest'
+        responses:
+          '201':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Question'
+    /surveys/{survey-id}/questions/{question-id}:
+      get:
+        summary: Question
+        operationId: question
+        tags:
+          - question
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Question'
+      delete:
+        summary: Delete Question
+        operationId: deleteQuestion
+        tags:
+          - question
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '204':
+            description: Success
+    /surveys/{survey-id}/questions/{question-id}/multiple-choices:
+      get:
+        summary: list of Multiple-Choice Answers
+        operationId: listMultipleChoice
+        tags:
+          - multipleChoice
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MultipleChoices'
+      post:
+        summary: Create Multiple Choice
+        operationId: createMulitpleChoice
+        tags:
+          - multipleChoice
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateMultipleChoiceRequest'
+        responses:
+          '201':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MultipleChoice'
+    /surveys/{survey-id}/questions/{question-id}/multiple-choices/{multiple-choice-id}:
+      get:
+        summary: Multiple-Choice
+        operationId: multipleChoice
+        tags:
+          - multipleChoice
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: multiple-choice-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MultipleChoice'
+      delete:
+        summary: Delete Multiple-Choice
+        operationId: deleteMultipleChoice
+        tags:
+          - question
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: multiple-choice-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '204':
+            description: Success
+
+/surveys/{survey-id}/questions/{question-id}/answers:
+      get:
+        summary: list of Answers
+        operationId: listAnswers
+        tags:
+          - answer
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Answers'
+      post:
+        summary: Create Answer for a Question
+        operationId: createAnswer
+        tags:
+          - answer
+        parameters:
+          - name: survey
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAnswerRequest'
+        responses:
+          '201':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Answer'
+    /surveys/{survey-id}/questions/{question-id}/answer/{answer-id}:
+      get:
+        summary: Answer for a Question
+        operationId: answer
+        tags:
+          - answer
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: question-id
+            in: path
+            required: true
+            schema:
+              type: integer
+          - name: answer-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Answer'
+      
+components:
+  schemas:
+    Survey:
+      type: object
+      required:
+        - id
+        - name
+        - startdate
+        - enddate
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        startdate:
+          type: date
+        enddate:
+          type: date
+    Surveys:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Survey'
+    CreateSurveyRequest:
+      type: object
+      required:
+        - name
+        - startdate
+        - enddate
+      properties:
+        name:
+          type: string
+        startdate:
+          type: date
+        enddate:
+          type: date
+  Question:
+      type: object
+      required:
+        - id
+        - question
+        - question_type
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        question_type:
+          type: integer
+    Questions:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    CreateQuestionRequest:
+      type: object
+      required:
+        - question
+        - question_type
+      properties:
+        question:
+          type: string
+        question_type:
+          type: integer
+
+  MultipleChoice:
+      type: object
+      required:
+        - id
+        - question_id
+        - answer
+      properties:
+        id:
+          type: integer
+        question_id:
+          type: integer
+        answer:
+          type: string
+    MultipleChoices:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultipleChoice'
+    CreateMultipleChoiceRequest:
+      type: object
+      required:
+        - question_id
+        - answer
+      properties:
+        question_id:
+          type: integer
+        answer:
+          type: string
+
+    Answer:
+      type: object
+      required:
+        - id
+        - question_id
+        - answer
+      properties:
+        id:
+          type: integer
+        question_id:
+          type: integer
+        answer:
+          type: string
+    Answers:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    CreateAnswerRequest:
+      type: object
+      required:
+        - question_id
+        - answer
+      properties:
+        question_id:
+          type: integer
+        answer:
+          type: string
