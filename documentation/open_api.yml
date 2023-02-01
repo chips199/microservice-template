@@ -5,8 +5,8 @@ info:
 paths:
     /surveys:
       get:
-        summary: list of surveys
-        operationId: listSurveys
+        summary: get List of surveys
+        operationId: getListSurveys
         tags:
           - survey
         parameters:
@@ -23,7 +23,7 @@ paths:
                 schema:
                   $ref: '#/components/schemas/Surveys'
       post:
-        summary: Create Survey
+        summary: create Survey
         operationId: createSurvey
         tags:
           - survey
@@ -41,8 +41,8 @@ paths:
                   $ref: '#/components/schemas/Survey'
     /surveys/{survey-id}:
       get:
-          summary: Survey
-          operationId: survey
+          summary: get Survey
+          operationId: getSurvey
           tags:
             - survey
           parameters:
@@ -59,7 +59,7 @@ paths:
                   schema:
                     $ref: '#/components/schemas/Survey'
       delete:
-        summary: Delete Survey
+        summary: delete Survey
         operationId: deleteSurvey
         tags:
           - survey
@@ -72,15 +72,40 @@ paths:
         responses:
           '204':
             description: Success
+      
+      put:
+        summary: Update/Publish Survey
+        operationId: updateSurvey
+        tags:
+          - survey
+        parameters:
+          - name: survey-id
+            in: path
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Survey'
+        responses:
+          '201':
+            description: Success
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Survey'
+
     
     /surveys/{survey-id}/questions:
       get:
-        summary: list of Questions
-        operationId: listQuestions
+        summary: get List of Questions
+        operationId: getListQuestions
         tags:
           - question
         parameters:
-          - name: survey
+          - name: survey-id
             in: path
             required: true
             schema:
@@ -91,14 +116,17 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/Questions'
+                  oneOf:
+                    - $ref: '#/components/schemas/QuestionOpenEnds'
+                    - $ref: '#/components/schemas/QuestionMultipleChoices'
+                    - $ref: '#/components/schemas/QuestionRatings'
       post:
-        summary: Create Question
+        summary: create Question
         operationId: createQuestion
         tags:
           - question
         parameters:
-          - name: survey
+          - name: survey-id
             in: path
             required: true
             schema:
@@ -107,7 +135,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateQuestionRequest'
+                  oneOf:
+                    - $ref: '#/components/schemas/QuestionOpenEnds'
+                    - $ref: '#/components/schemas/QuestionMultipleChoices'
+                    - $ref: '#/components/schemas/QuestionRatings'
         responses:
           '201':
             description: Success
@@ -117,8 +148,8 @@ paths:
                   $ref: '#/components/schemas/Question'
     /surveys/{survey-id}/questions/{question-id}:
       get:
-        summary: Question
-        operationId: question
+        summary: get Question
+        operationId: getQuestion
         tags:
           - question
         parameters:
@@ -138,9 +169,12 @@ paths:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/Question'
+                  oneOf:
+                    - $ref: '#/components/schemas/QuestionOpenEnd'
+                    - $ref: '#/components/schemas/QuestionMultipleChoice'
+                    - $ref: '#/components/schemas/QuestionRating'
       delete:
-        summary: Delete Question
+        summary: delete Question
         operationId: deleteQuestion
         tags:
           - question
@@ -158,120 +192,15 @@ paths:
         responses:
           '204':
             description: Success
-    /surveys/{survey-id}/questions/{question-id}/multiple-choices:
+    
+    /surveys/{survey-id}/questions/{question-id}/answers:
       get:
-        summary: list of Multiple-Choice Answers
-        operationId: listMultipleChoice
-        tags:
-          - multipleChoice
-        parameters:
-          - name: survey
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: question-id
-            in: path
-            required: true
-            schema:
-              type: integer
-        responses:
-          '200':
-            description: Success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/MultipleChoices'
-      post:
-        summary: Create Multiple Choice
-        operationId: createMulitpleChoice
-        tags:
-          - multipleChoice
-        parameters:
-          - name: survey
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: question-id
-            in: path
-            required: true
-            schema:
-              type: integer
-        requestBody:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateMultipleChoiceRequest'
-        responses:
-          '201':
-            description: Success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/MultipleChoice'
-    /surveys/{survey-id}/questions/{question-id}/multiple-choices/{multiple-choice-id}:
-      get:
-        summary: Multiple-Choice
-        operationId: multipleChoice
-        tags:
-          - multipleChoice
-        parameters:
-          - name: survey-id
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: question-id
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: multiple-choice-id
-            in: path
-            required: true
-            schema:
-              type: integer
-        responses:
-          '200':
-            description: Success
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/MultipleChoice'
-      delete:
-        summary: Delete Multiple-Choice
-        operationId: deleteMultipleChoice
-        tags:
-          - question
-        parameters:
-          - name: survey-id
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: question-id
-            in: path
-            required: true
-            schema:
-              type: integer
-          - name: multiple-choice-id
-            in: path
-            required: true
-            schema:
-              type: integer
-        responses:
-          '204':
-            description: Success
-
-/surveys/{survey-id}/questions/{question-id}/answers:
-      get:
-        summary: list of Answers
-        operationId: listAnswers
+        summary: get List of Answers
+        operationId: getListAnswers
         tags:
           - answer
         parameters:
-          - name: survey
+          - name: survey-id
             in: path
             required: true
             schema:
@@ -289,12 +218,12 @@ paths:
                 schema:
                   $ref: '#/components/schemas/Answers'
       post:
-        summary: Create Answer for a Question
+        summary: create Answer for a Question
         operationId: createAnswer
         tags:
           - answer
         parameters:
-          - name: survey
+          - name: survey-id
             in: path
             required: true
             schema:
@@ -318,8 +247,8 @@ paths:
                   $ref: '#/components/schemas/Answer'
     /surveys/{survey-id}/questions/{question-id}/answer/{answer-id}:
       get:
-        summary: Answer for a Question
-        operationId: answer
+        summary: get Answer for a Question
+        operationId: getAnswer
         tags:
           - answer
         parameters:
@@ -353,17 +282,20 @@ components:
       required:
         - id
         - name
-        - startdate
-        - enddate
+        - start_date
+        - end_date
+        - published
       properties:
         id:
           type: integer
         name:
           type: string
-        startdate:
-          type: date
-        enddate:
-          type: date
+        start_date:
+          type: number
+        end_date:
+          type: number
+        published:
+          type: boolean
     Surveys:
       type: object
       properties:
@@ -379,29 +311,25 @@ components:
       type: object
       required:
         - name
-        - startdate
-        - enddate
       properties:
         name:
           type: string
-        startdate:
-          type: date
-        enddate:
-          type: date
-  Question:
+        start_date:
+          type: number
+        end_date:
+          type: number
+
+    QuestionOpenEnd:
       type: object
       required:
         - id
         - question
-        - question_type
       properties:
         id:
           type: integer
         question:
           type: string
-        question_type:
-          type: integer
-    Questions:
+    QuestionOpenEnds:
       type: object
       properties:
         prev:
@@ -411,31 +339,97 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Question'
-    CreateQuestionRequest:
+            $ref: '#/components/schemas/QuestionOpenEnd'
+    CreateQuestionOpenEndRequest:
       type: object
       required:
         - question
-        - question_type
       properties:
         question:
           type: string
-        question_type:
-          type: integer
 
-  MultipleChoice:
+    QuestionRating:
       type: object
       required:
         - id
-        - question_id
-        - answer
+        - question
       properties:
         id:
           type: integer
-        question_id:
-          type: integer
-        answer:
+        question:
           type: string
+    QuestionRatings:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionRating'
+    CreateQuestionRatingRequest:
+      type: object
+      required:
+        - question
+      properties:
+        question:
+          type: string
+
+    QuestionMultipleChoice:
+      type: object
+      required:
+        - id
+        - question
+        - answers
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        answers:
+            type: array
+            items:
+              $ref: '#/components/schemas/MultipleChoice'
+
+    QuestionMultipleChoices:
+      type: object
+      properties:
+        prev:
+          type: string
+        next:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionMultipleChoice'
+    CreateQuestionMultipleChoiceRequest:
+      type: object
+      required:
+        - question
+        - answers
+      properties:
+        question:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MultipleChoice'
+
+    MultipleChoice:
+        type: object
+        required:
+          - id
+          - question_id
+          - answer
+        properties:
+          id:
+            type: integer
+          question_id:
+            type: integer
+          answer:
+            type: string
     MultipleChoices:
       type: object
       properties:
